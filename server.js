@@ -19,6 +19,7 @@ app.get('/', function (req, res) {
 app.use("/js", express.static(__dirname + '/js/prod'));
 app.use("/img", express.static(__dirname + '/img'));
 app.use("/css", express.static(__dirname + '/css/prod'));
+app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 
 //twitter
 var t = new twitter({
@@ -27,18 +28,16 @@ var t = new twitter({
   access_token_key:     process.env.ACCESS_TOKEN,
   access_token_secret:  process.env.ACCESS_TOKEN_SECRET
   });
+
 //change for dev/prod
-app.configure('development', function() {
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-});
-app.configure('production', function() {
-  app.use(express.errorHandler());
+// app.configure('production', function() {
   //for heroku cedar (cannot use websockets!)
   io.configure(function () {
     io.set("transports", ["xhr-polling"]);
     io.set("polling duration", 10);
+    io.set("close timeout", 10);
   });
-});
+// });
 
 //remove extraneous debug statements
 io.set('log level', 1);
