@@ -30,6 +30,10 @@ path.link {
     position: relative;
 }
 
+.query {
+    font-weight: bold;
+}
+
 .infobox {
     position: absolute;
     padding: 5px 5px 0px 5px;

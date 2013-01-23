@@ -6,7 +6,7 @@
 Serves tweets in realtime:
 
   - as a population map (# tweets)
-  - *added*: as a choropleth (# tweets/sq m^2)
+  - *added*: as a choropleth (# tweets/1000 people)
 
 for a given search query.
 
@@ -16,7 +16,7 @@ Features
 * shows tweets for given search in real time
 * displays device distribution on hover
 * keeps a count of tweets per state
-* colors map by tweet count and tweet count/sq km
+* colors map by tweet count and tweet count/1000 people
 * plots cities (100 last cities)
 * **removed**: draw curves connecting peoples mentions (too many api calls)
 
@@ -26,6 +26,11 @@ Future
 * figure out how to scale the app based on the rate (fast/slow)
 * add back functionality to draw lines for tweets with mentions (@)
 * use the database to store popular queries to recommend
+* change size of point by some variable (number of tweets in location)
+* colorize points by word (if multiple words)
+ * Example: Could use football team colors if searching for both teams
+* A way to show how often each word is tweeted in comparison (bar chart?)
+ * Text analysis (sentiment ex: know if a person likes a certain team)
 
 Background
 -----------
@@ -52,18 +57,17 @@ Examples of Use (Count)
 
 *showing connections on tweets with mentions (@) using yellow lines*
 
-Density vs. Count
+Population Density vs. Count
 -
-![density](http://i.imgur.com/UpDRZ.png)
-![count](http://i.imgur.com/vrCCd.png)
+![density](http://i.imgur.com/SvCgGdE.png)
+![count](http://i.imgur.com/v35rdSk.png)
 
-To get a real choropleth, you would want to divide each states # of tweets by their area in sq m. However I guess the way I implemented it makes the states have no color at all (using a linear gradient). Changing it to a pow(2) gradient shows the colors better.
+To get a real choropleth, you would want to divide each states # of tweets by their area in sq m or actual population.
 
-The map by count (same as population) looks nicer but makes it so Texas and California always stand out even though they are larger states.
+The map by count shows colors better earlier but makes it so Texas and California always stand out even though they are larger states.
 
 Tech
 -----------
-mostly all open source projects:
 
 * Hosting: [Heroku] - using its great feature of 750 free dyno-hours per app
 * Server: [node.js] - to get tweets

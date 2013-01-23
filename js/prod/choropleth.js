@@ -274,9 +274,10 @@ function reset_chart() {
 }
 
 var words = [];
+
 var words_count = [];
 
-function wordMatches(sent_data,words) {
+function wordMatches(text,words) {
   //regex
   // var words_regex = "sr|ad|bob";
   // var patt= new RegExp(words_regex,"gi");
@@ -298,17 +299,12 @@ function wordMatches(sent_data,words) {
 
   if (words.length === 0) return false;
   for (var i = 0;i < words.length; i++) {
-      var data_lc = sent_data.toLowerCase();
+      var data_lc = text.toLowerCase();
       var words_lc = words[i].toLowerCase();
-      if (data_lc.indexOf(words_lc+ " ") !== -1) {
+      if (data_lc.indexOf(words_lc + " ") !== -1 || data_lc.indexOf(words_lc + ".") !== -1 || data_lc.indexOf("#" + words_lc) !== -1) {
           words_count[i]++;
-          return true;
-      } else if (data_lc.indexOf(words_lc + ".") !== -1) {
-          words_count[i]++;
-          return true;
-      } else if (data_lc.indexOf("#" + words_lc) !== -1) {
-          words_count[i]++;
-          return true;
+          var newtext = text.replace(words[i],"<span class='query'>"+words[i]+"</span>");
+          return [true,newtext];
       }
   }
   return false;
@@ -321,7 +317,8 @@ function wordMatches(sent_data,words) {
 
 socket.on('send_tweet', function (sent_data) {
   // console.log('got tweet');
-  if (received && wordMatches(sent_data.text,words)) {
+  var wordContained = wordMatches(sent_data.text,words);
+  if (received && wordContained[0] == true) {
     for (var i = 0;i < words.length; i++) {
       d3.select('#words_counts').selectAll('div')
         .text(function(d,i) {
@@ -349,7 +346,7 @@ socket.on('send_tweet', function (sent_data) {
       legend
         .transition()
         .duration(1000)
-        .text(d3.max(d3.values(data_area)).toFixed(4));
+        .text(d3.max(d3.values(data_area)).toFixed(3));
     }
     else {
       legend
@@ -408,6 +405,7 @@ socket.on('send_tweet', function (sent_data) {
       if (tweets_html.length >= num_tweets_display) {
         tweets_html.shift();
       }
+      sent_data.text = wordContained[1];
       tweets_html.push(sent_data);
       updateTweets(tweets_html);
     }
@@ -699,26 +697,25 @@ gradient.append("svg:stop")
     .attr("stop-opacity", 1);
 
 svg.append("svg:rect")
-    .attr("x", 900)
+    .attr("x", 895)
     .attr("y", 200)
     .attr("width", 30)
     .attr("height", 100)
     .style("fill", "url(#gradient)");
 
 var caption_toggle = svg.append("svg:text")
-    .attr("x", 890)
+    .attr("x", 870)
     .attr("y", 196)
-    .text("per km^2");
+    .text("tweets/1k ppl");
 
 svg.append("svg:text")
-    .attr("x", 890)
+    .attr("x", 884)
     .attr("y", 318)
     .text("0 tweets");
 
 var legend = svg.append("svg:text")
-    .attr("x", 895)
-    .attr("y", 182)
-    .text("0.0000");
+    .attr("x", 905)
+    .attr("y", 182);
 
 $("#search_btn").click(function() {
   if ($("#words").val() === "") {
@@ -800,24 +797,24 @@ $('#fill_toggle').click(function() {
     if (density) {
       $(this).text("Count");
       density = false;
-      caption_toggle.text("tweets").attr("x", 895);
-      legend.text(d3.max(d3.values(data))).attr("x", 908);
+      caption_toggle.text("tweets").attr("x", 890);
+      legend.text(d3.max(d3.values(data))).attr("x", 902);
+      color.domain([0, d3.max(d3.values(data_area))]);
     } else {
       $(this).text("Density");
       density = true;
-      caption_toggle.text("per m^2").attr("x", 890);
+      caption_toggle.text("tweets/1k ppl").attr("x", 870);
       legend.text(d3.max(d3.values(data_area)).toFixed(3)).attr("x", 895);
+      color.domain([0, d3.max(d3.values(data))]);
     }
     states.selectAll("path")
       .transition()
         .duration(500)
         .style("fill", function(d) {
           if (density) {
-            color.domain([0, d3.max(d3.values(data_area))]);
             return color(data_area[d.abbr]);
           }
           else {
-            color.domain([0, d3.max(d3.values(data))]);
             return color(data[d.abbr]);
           }
         });
@@ -836,7 +833,7 @@ var zeropad = function (num) {
   return ((num < 10) ? '0' : '') + num;
 };
 
-var area = {"AL" : 135767.34,"AK" : 1723336.69,"AZ" : 295233.51,"AR" : 137731.80,"CA" : 423967.42,"CO" : 269601.35,"CT" : 14357.38,"DE" : 6445.76,"DC" : 177.00,"FL" : 170311.65,"GA" : 153910.43,"HI" : 28313.02,"ID" : 216442.57,"IL" : 149995.40,"IN" : 94326.20,"IA" : 145745.89,"KS" : 213099.96,"KY" : 104655.71,"LA" : 135658.74,"ME" : 91633.11,"MD" : 32131.22,"MA" : 27335.74,"MI" : 250486.84,"MN" : 225162.76,"MS" : 125437.72,"MO" : 180540.28,"MT" : 380831.08,"NE" : 200329.90,"NV" : 286379.70,"NH" : 24214.22,"NJ" : 22591.37,"NM" : 314917.41,"NY" : 141296.73,"NC" : 139390.98,"ND" : 183107.81,"OH" : 116097.72,"OK" : 181037.23,"OR" : 254799.24,"PA" : 119280.19,"RI" : 4001.23,"SC" : 82932.67,"SD" : 199728.68,"TN" : 109153.10,"TX" : 695661.62,"UT" : 219881.90,"VT" : 24906.27,"VA" : 110786.55,"WA" : 184660.84,"WV" : 62755.52,"WI" : 169634.83,"WY" : 253334.51,"PR" : 13791.28};
+var area = {"AL":4822.023,"AK":731.449,"AZ":6553.255,"AR":2949.131,"CA":38041.430,"CO":5187.582,"CT":3590.347,"DE":917.092,"DC":632.323,"FL":19317.568,"GA":9919.945,"HI":1392.313,"ID":1595.728,"IL":12875.255,"IN":6537.334,"IA":3074.186,"KS":2885.905,"KY":4380.415,"LA":4601.893,"ME":1329.192,"MD":5884.563,"MA":6646.144,"MI":9883.360,"MN":5379.139,"MS":2984.926,"MO":6021.988,"MT":1005.141,"NE":1855.525,"NV":2758.931,"NH":1320.718,"NJ":8864.590,"NM":2085.538,"NY":19570.261,"NC":9752.073,"ND":699.628,"OH":11544.225,"OK":3814.820,"OR":3899.353,"PA":12763.536,"PR":3667.084,"RI":1050.292,"SC":4723.723,"SD":833.354,"TN":6456.243,"TX":26059.203,"UT":2855.287,"VT":626.011,"VA":8185.867,"WA":6897.012,"WV":1855.413,"WI":5726.398,"WY":576.412};
 
 function get_reset_states() {
   return {"AL" : 0,"AK" : 0,"AZ" : 0,"AR" : 0,"CA" : 0,"CO" : 0,"CT" : 0,"DE" : 0,"DC" : 0,"FL" : 0,"GA" : 0,"HI" : 0,"ID" : 0,"IL" : 0,"IN" : 0,"IA" : 0,"KS" : 0,"KY" : 0,"LA" : 0,"ME" : 0,"MD" : 0,"MA" : 0,"MI" : 0,"MN" : 0,"MS" : 0,"MO" : 0,"MT" : 0,"NE" : 0,"NV" : 0,"NH" : 0,"NJ" : 0,"NM" : 0,"NY" : 0,"NC" : 0,"ND" : 0,"OH" : 0,"OK" : 0,"OR" : 0,"PA" : 0,"RI" : 0,"SC" : 0,"SD" : 0,"TN" : 0,"TX" : 0,"UT" : 0,"VT" : 0,"VA" : 0,"WA" : 0,"WV" : 0,"WI" : 0,"WY" : 0,"PR" : 0};
