@@ -1,0 +1,170 @@
+.chart_bottom {
+    font-size: 12px;
+    position: absolute;
+    top: 471px;
+    right: 5px;
+}
+
+path.link {
+  fill: none;
+  stroke: yellow;
+  stroke-width: 1px;
+}
+
+.container {
+    width: 960px;
+    margin: 0px auto;
+    color: #474747;
+    font-size: 14px;
+    line-height: 18px;
+    font-family: "Helvetica Neue",Arial,sans-serif;
+}
+
+.states path {
+    fill: white;
+    stroke: #333;
+    stroke-width: 1.0px;
+}
+
+.hud_container {
+    position: relative;
+}
+
+.infobox {
+    position: absolute;
+    padding: 5px 5px 0px 5px;
+    background-color: rgba(255,255,255,.9);
+    font-size: 11px;
+    height: 95px;
+}
+
+    .infobox .info_city {
+        /*width: 100px;*/
+        margin: 0px;
+    }
+
+    .infobox .info_devices {
+          /*width: 100px;*/
+          margin: 0px;
+    }
+
+    .infobox svg {
+        position: absolute;
+        top: 0px;
+        left: 100px;
+    }
+
+.tweets_container {
+    font-size: 12px;
+}
+
+    .tweets_container rect {
+        fill: white;
+        stroke: lightgray;
+    }
+
+        .tweets_container rect:hover {
+            fill: #D3D3D3;
+        }
+
+    .tweets_container .tweet_image {
+        float: left;
+        margin-right: 7px;
+        margin-left: -3px;
+    }
+
+    .tweets_container .tweet_info {
+        float: left;
+        width: 905px;
+    }
+
+        .tweets_container .tweet_info .text {
+            overflow-x: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+    .tweets_container .fullname {
+        font-weight: bold;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .tweets_container .screenname {
+        color: #999;
+        text-decoration: none !important;
+    }
+
+    .tweets_container .user_link:hover {
+        text-decoration:underline;
+    }
+
+    .tweets_container .place_name {
+        color: steelblue;
+    }
+
+    .tweets_container .device_name {
+        color: #333;
+    }
+
+    .tweets_container .embed_text {
+        color: #777;
+    }
+
+        .tweets_container .embed_text:hover {
+            color: #333;
+            text-decoration:underline;
+        }
+
+    .tweets_container .intents {
+        float: right;
+    }
+
+.twitter-mention-button {
+    float: right;
+    margin-top: 5px;
+    position: absolute;
+    right: 0px;
+    top: 20px;
+}
+
+#chart {
+    clear: both;
+}
+
+    #chart svg {
+        background: #eee;
+        width: 960px;
+        height: 490px;
+    }
+
+#search {
+    margin-left: 5px;
+    position: absolute;
+    left: 0;
+}
+
+#time_container {
+    margin-top: 4px;
+    color: #333;
+    position: absolute;
+    right: 5px;
+}
+
+/*.switch_view {
+    position: absolute;
+    top: 50px;
+    right: 5px;
+}*/
+
+#fill_toggle {
+    position: absolute;
+    top: 50px;
+    right: 5px;
+}
+
+#word_counts {
+    position: absolute;
+    top: 30px;
+    left: 5px;
+}

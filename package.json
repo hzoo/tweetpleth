@@ -1,0 +1,30 @@
+{
+  "name": "Tweetpleth",
+  "version": "0.0.1",
+  "description": "A real-time choropleth map of queried geotagged tweets.",
+  "main": "yes",
+  "dependencies": {
+    "ntwitter": "~0.5.0",
+    "socket.io-client": "~0.9.11",
+    "redis": "~0.8.1",
+    "socket.io": "~0.9.11",
+    "express": "~3.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "0.8.14",
+    "npm":  "1.1.65"
+  },
+  "repository": {
+    "type": "git",
+    "url": "j"
+  },
+  "keywords": [
+    "tweet"
+  ],
+  "author": "Henry Zhu",
+  "license": "MIT"
+}
