@@ -8,6 +8,10 @@ $(document).ready(function() {
     });
 });
 
+$(document).keyup(function(e) {
+  if (e.keyCode == 27) { $('#zen').click();  }   // esc
+});
+
 var data,
 data_area,
 width      = 960,
@@ -15,12 +19,16 @@ height     = 490,
 projection = d3.geo.albersUsa(),
 path       = d3.geo.path().projection(projection),
 density    = true,
+zen        = false,
 svg = d3.select("#chart")
   .append("svg:svg")
+  .attr("width", width)
+  .attr("height", height);
+  // .attr("viewBox", "0 0 960 490")
+  // .attr("preserveAspectRatio", "xMinYMin meet");
   // .call(d3.behavior.zoom()
   //   .scaleExtent([1,3])
   //   .on("zoom", redraw))
-  .append("svg:g");
 
 var myMouseOverFunction = function(d) {
   var text = d3.select(this);
@@ -196,13 +204,32 @@ var y = d3.scale.linear()
    .domain([0, num_tweets_display])
    .rangeRound([0, h*num_tweets_display-1]);
 
+var resize;
 window.onresize = function() {
     // console.log(window.innerHeight);
     num_tweets_display = getNumTweetsToDisplay();
     y.domain([0, num_tweets_display]).rangeRound([0, h*num_tweets_display-1]);
     chart.attr("height", h * num_tweets_display - 1);
     // console.log(num_tweets_display);
+    if (zen) {
+      clearTimeout(resize);
+      resize = setTimeout(function(){resize_states();}, 500);
+    }
 };
+
+function resize_states() {
+  d3.select("#chart svg")
+    .style('width',window.innerWidth+"px")
+    .style('height',window.innerHeight+"px");
+  projection.scale(1000*window.innerWidth/960).translate([window.innerWidth/2, window.innerHeight/2]);
+  path.projection(projection);
+  states.selectAll("path")
+    .transition()
+      .duration(500)
+      .attr('d', path);
+  points_html = [];
+  $('.alert').width(window.innerWidth-50);
+}
 
 var chart = d3.select(".tweets_container").append("svg")
      .attr("class", "chart")
@@ -318,7 +345,7 @@ function wordMatches(text,words) {
 socket.on('send_tweet', function (sent_data) {
   // console.log('got tweet');
   var wordContained = wordMatches(sent_data.text,words);
-  if (received && wordContained[0] == true) {
+  if (received && wordContained[0] == true && !zen) {
     for (var i = 0;i < words.length; i++) {
       d3.select('#words_counts').selectAll('div')
         .text(function(d,i) {
@@ -432,6 +459,18 @@ socket.on('send_tweet', function (sent_data) {
       });
       updatePaths(paths_html,projection(sent_data.coordinates2));
     }
+    d3.timer.flush();
+  } else if (zen) {
+    if (points_html.length >= 100) {
+      points_html.shift();
+    }
+    points_html.push({
+      id: sent_data.id,
+      abbr: sent_data.state,
+      place_name: sent_data.place_name,
+      coord: projection(sent_data.coordinates)
+    });
+    updatePoints(points_html);
     d3.timer.flush();
   }
 });
@@ -610,7 +649,7 @@ function updatePoints(data) {
     });
 
   text.exit().transition()
-      .duration(1000)
+      .duration(function(d,i) { return i * 10 + 100;})
     .style("opacity", 0)
       .remove();
 
@@ -813,6 +852,71 @@ $('#fill_toggle').click(function() {
         .style("fill", function(d) {
           if (density) {
             return color(data_area[d.abbr]);
+          }
+          else {
+            return color(data[d.abbr]);
+          }
+        });
+});
+
+//#5f96b7
+
+$('#zen').click(function() {
+    if (zen) {
+      $('.alert').alert('close');
+      $(this).text("Normal");
+      zen = false;
+      d3.select("html").style('background-color','white');
+      d3.select("body").style('background-color','white');
+      d3.select("#chart svg")
+        .style('background-color','#EEE')
+        .style('width','960px')
+        .style('height','490px');
+      svg.selectAll("rect,text")
+          .style('display','block');
+      // $('.chart_bottom').show();
+      // $('#time_container').show();
+      // $('#fill_toggle').show();
+      // $('#search').show();
+      $('.hud_container').show();
+      $('.container').css('margin','0px auto');
+      projection.scale(1000).translate([480, 250]);
+      points_html = [];
+      updatePoints(points_html);
+    } else {
+      $('#alert_placeholder').html('<div class="alert">'+
+                '<button type="button" class="close" data-dismiss="alert">&times;</button>'+
+                '<strong>Help:</strong> Press \'Esc\' to return to normal.'+
+                '</div>');
+      $('.alert').width(window.innerWidth-50);
+      $(this).text("Zen");
+      zen = true;
+      d3.select("html").style('background-color','black');
+      d3.select("body").style('background-color','black');
+      d3.select("#chart svg")
+        .style('background-color','#204a64')
+        // .attr('width',window.innerWidth+'px');
+        .style('width',window.innerWidth+"px")
+        .style('height',window.innerHeight+"px");
+      svg.selectAll("rect,text")
+        .style('display','none');
+      // $('.chart_bottom').hide();
+      // $('#time_container').hide();
+      // $('#fill_toggle').hide();
+      // $('#search').hide();
+      $('.hud_container').hide();
+      $('.container').css('margin','0');
+      projection.scale(1000*window.innerWidth/960).translate([window.innerWidth/2, window.innerHeight/2]);
+    }
+    path.projection(projection);
+    $('#zen').show();
+    states.selectAll("path")
+      .transition()
+        .duration(function(d,i) {return i * 10 + 300;})
+        .attr('d', path)
+        .style("fill", function(d) {
+          if (zen) {
+            return '#333';
           }
           else {
             return color(data[d.abbr]);

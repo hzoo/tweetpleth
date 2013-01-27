@@ -10,6 +10,8 @@ Serves tweets in realtime:
 
 for a given search query.
 
+**LAST UPDATE** - Added 'Zen mode' based on the awesome [Tweetping](http://tweetping.net/) viz. Press Esc to go back.
+
 Features
 -----------
 
@@ -19,6 +21,7 @@ Features
 * colors map by tweet count and tweet count/1000 people
 * plots cities (100 last cities)
 * **removed**: draw curves connecting peoples mentions (too many api calls)
+* zen mode: no filtering of words, and only shows points. try it in fullscreen! Press Esc to return to normal.
 
 Future
 -----------
@@ -65,6 +68,10 @@ Population Density vs. Count
 To get a real choropleth, you would want to divide each states # of tweets by their area in sq m or actual population.
 
 The map by count shows colors better earlier but makes it so Texas and California always stand out even though they are larger states.
+
+![zen](http://i.imgur.com/MgMUmcQ.png)
+
+*zen mode*
 
 Tech
 -----------

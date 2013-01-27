@@ -14,6 +14,7 @@
 
         <body>
         <div class="container">
+            <div id="alert_placeholder"></div>
             <div class="hud_container">
                 <form id="search" class="form-inline">
                     <div class="btn-group">
@@ -40,6 +41,7 @@
                     Toggle
                 </button> -->
                 <div id="word_counts"></div>
+                <button type="submit" id="zen" class="btn btn-inverse">Normal</button>
                 <button type="submit" id="fill_toggle" class="btn btn-primary">Density</button>
                 <div id="time_container">
                     <em>
@@ -77,32 +79,32 @@
         </div>
         <script type="text/javascript" src="js/jquery-1.8.0.min.js">
         </script>
-        <script type="text/javascript" src="js/bootstrap-dropdown.min.js">
+        <script type="text/javascript" src="js/bootstrap.min.js">
         </script>
-        <script type="text/javascript" src="js/d3.v2.js">
+        <script type="text/javascript" src="js/d3.v3.min.js">
         </script>
         <script type="text/javascript" src="js/choropleth.js">
         </script>
         <script type="text/javascript" src="js/jquery.timeago.js">
         </script>
         <script type="text/javascript">
-            //hn
-                (function(d, t) {
-                    var g = d.createElement(t),
-                        s = d.getElementsByTagName(t)[0];
-                    g.src = '//hnbutton.appspot.com/static/hn.min.js';
-                    s.parentNode.insertBefore(g, s);
-                }(document, 'script'));
-            //twitter
-            !function(d, s, id) {
-                var js, fjs = d.getElementsByTagName(s)[0];
-                if (!d.getElementById(id)) {
-                    js = d.createElement(s);
-                    js.id = id;
-                    js.src = "https://platform.twitter.com/widgets.js";
-                    fjs.parentNode.insertBefore(js, fjs);
-                }
-            }(document, "script", "twitter-wjs");
+            // //hn
+            //     (function(d, t) {
+            //         var g = d.createElement(t),
+            //             s = d.getElementsByTagName(t)[0];
+            //         g.src = '//hnbutton.appspot.com/static/hn.min.js';
+            //         s.parentNode.insertBefore(g, s);
+            //     }(document, 'script'));
+            // //twitter
+            // !function(d, s, id) {
+            //     var js, fjs = d.getElementsByTagName(s)[0];
+            //     if (!d.getElementById(id)) {
+            //         js = d.createElement(s);
+            //         js.id = id;
+            //         js.src = "https://platform.twitter.com/widgets.js";
+            //         fjs.parentNode.insertBefore(js, fjs);
+            //     }
+            // }(document, "script", "twitter-wjs");
             //ga
             var _gaq = _gaq || [];
             _gaq.push(['_setAccount', 'UA-37164516-1']);

@@ -20,6 +20,7 @@ app.use("/js", express.static(__dirname + '/js/prod'));
 app.use("/img", express.static(__dirname + '/img'));
 app.use("/css", express.static(__dirname + '/css/prod'));
 app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+app.use(express.compress());
 
 //twitter
 var t = new twitter({
