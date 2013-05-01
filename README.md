@@ -1,7 +1,6 @@
 [Tweetpleth]
 =========
 
-[Tweetpleth-Superbowl](http://tweetpleth-superbowl.herokuapp.com/)
 ![football](http://i.imgur.com/eqPmeZ2.png)
 
 Serves tweets in realtime:
